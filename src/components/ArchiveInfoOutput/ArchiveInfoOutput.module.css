@@ -1,0 +1,28 @@
+.output{
+    color: rgb(6, 1, 1);
+    padding-top: 5vh;
+    font-size: 22px;
+}
+
+.output div{
+    margin-top: 0.5em;
+}
+
+.green{
+    color: rgb(34, 199, 39);
+    font-weight: bold;
+    margin-left: 1em;
+}
+
+.red{
+    font-weight: bold;
+    color: red;
+    margin-left: 1em;
+}
+
+
+.blue{
+    font-weight: bold;
+    color:rgb(26, 82, 145);
+    margin-left: 1em;
+}

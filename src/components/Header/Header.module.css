@@ -1,0 +1,27 @@
+.header{
+    padding: 1em 3em;
+    background-color: black;
+    color: #fff;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+}
+
+.header a {
+    color: #fff;
+    text-decoration: none;
+    transition: 0.3s;
+
+}
+
+.header a:hover{
+    color: rgb(180, 133, 255);
+}
+
+.first{
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+}
