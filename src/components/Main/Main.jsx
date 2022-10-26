@@ -35,11 +35,9 @@ function Main() {
             setResultOfResponse(response.data)
             setOpen(true);
 
-            console.log(response.data.archive.id)
-
             if (response.data.status === 0) {
                 setTimeout(async () => {
-                    window.location.replace(`http://localhost:3000/result-checking:id=${response.data.archive.id}`)
+                    window.location.replace(`http://localhost:3000/check-id:${response.data.archive.id}`)
                 }, 2000)
             }
 
@@ -118,7 +116,9 @@ function Main() {
 
 
                     <div style={{ display: "flex", justifyContent: "center", }}>
-                        <Button variant="contained" color="primary"
+                        <Button variant="contained" sx={{
+                            background: "linear-gradient(90deg,#833AB4 0%,#FD1D1D 50%,#FCB045 100%)"
+                        }}
                             size="large" onClick={handleSubmit}>
                             Отправить
                         </Button>

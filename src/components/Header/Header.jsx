@@ -7,12 +7,13 @@ function Header() {
     return (
         <header className={styles.header}>
             <div className={styles.first}>
-                <a href="/">Главная</a>
-                <a href="/check-by-id">Проверить архив по Id</a>
+                <Link to="/">Главная</Link>
+                <Link to="/check-by-id">Проверить архив по Id</Link>
+                <Link to="/search">Поиск</Link>
             </div>
 
             <div>
-                <a href="/support">Support</a>
+                <Link to="/support">Support</Link>
             </div>
         </header>
     )

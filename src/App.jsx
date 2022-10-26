@@ -15,6 +15,7 @@ import Archive from "./pages/Archive";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 import Result from "./components/Result/Result";
+import Search from "./components/Search/Search";
 
 export default function App() {
 
@@ -24,9 +25,10 @@ export default function App() {
       <Header />
 
       <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/check-id:id" element={<Result />} />
-        </Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/check-id:id" element={<Result />} />
+        <Route path="/search" element={<Search />} />
+      </Routes>
 
     </div>
 
