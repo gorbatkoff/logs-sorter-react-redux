@@ -1,0 +1,6 @@
+.buttons{
+    display: grid;
+    grid-template-columns: repeat(4, 300px);
+    justify-content: space-between;
+    padding: 0 100px;
+}
