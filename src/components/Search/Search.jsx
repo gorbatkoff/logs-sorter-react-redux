@@ -89,27 +89,44 @@ function Search() {
 
     async function onSubmit(data, typeOfSearch) {
 
-        console.log(data);
 
-        if (data.place === 'logs') {
-            switch (data.type) {
-                case 'Emails':
-                    return getEmails(data);
-                case 'Sites':
-                    return getSites(data);
-                case 'UserDatas':
-                    return getUserDatas(data);
-                default:
-                    return null;
-            }
+        // if (data.place === 'logs') {
+
+        switch (data.type) {
+            case 'Emails':
+                return getEmails(data);
+            case 'Sites':
+                return getSites(data);
+            case 'UserDatas':
+                return getUserDatas(data);
+            default:
+                return null;
         }
+        // }
 
-        if (data.place === 'files') {
-            getFiles(data.search);
-            setTypeOfSearch('Sites');
+        // if (data.place === 'files') {
+        //     getFiles(data.search);
+        //     setTypeOfSearch('Sites');
+        // }
+
+    }
+
+    async function outputLogins(id) {
+
+        try {
+            const request = await axios.get(`
+            http://94.181.21.237:5000/api/Userdata/GetFileUserdatasBySiteId?SiteId=${id}
+            `);
+
+            setLogs(request.data.split('\n'));
+
+        } catch (error) {
+            console.log(error);
         }
 
     }
+
+
 
     const handleChangeType = (event) => {
         setTypeOfSearch(event.target.value);
@@ -122,13 +139,14 @@ function Search() {
     }
 
     return (
-        <div>
+        <div style={{ paddingTop: "5em" }}>
 
+            <h3 align="center">Поиск по базам</h3>
             <form className={styles.search} onSubmit={handleSubmit(onSubmit)}>
                 <TextField {...register("search")} id="outlined-basic" label="Что будем искать?" variant="outlined"
                     sx={{ width: '50%', }} placeholder="Id / Text search" />
 
-                <Box sx={{ width: '25%', }}>
+                {/* <Box sx={{ width: '25%', }}>
                     <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">Что искать?</InputLabel>
                         <Select
@@ -143,7 +161,7 @@ function Search() {
                             <MenuItem value={"files"}>Логин/Пароли</MenuItem>
                         </Select>
                     </FormControl>
-                </Box>
+                </Box> */}
 
                 <Box sx={{ width: '25%', }}>
                     <FormControl fullWidth>
@@ -170,17 +188,37 @@ function Search() {
                 >Поиск</Button >
             </form>
 
+            
             {
-                data
-                    ?
-                    <DataOutput data={data} type={typeOfSearch} />
-                    :
-                    <Container>
-                        <h2 align="center">Нажмите кнопку «Поиск»</h2>
-                        <p align="center">Внимание! Поиск Логин/Паролей возможен только по сайтам. <br />
-                            Также в поле ввода необходимо ввести Id сайта по которому хотите осуществить поиск логинов</p>
-                    </Container>
-            }
+                    data
+                        ?
+                        <DataOutput data={data} type={typeOfSearch} />
+                        :
+                        <Container>
+                            <h2 align="center">Нажмите кнопку «Поиск»</h2>
+                        </Container>
+                }
+
+
+
+            {/* ================================================ */}
+
+            {/* ================================================ */}
+
+            <h3 align="center">Поиск по логинами и паролям</h3>
+
+            <form className={styles.search} onSubmit={handleSubmit(outputLogins)}>
+                <TextField {...register("search-by-id")} id="outlined-basic" label="Введите Id" variant="outlined"
+                    sx={{ width: '50%', }} placeholder="353" />
+
+
+                <Button type="submit" variant="contained" size="large"
+                    sx={{
+                        background: "linear-gradient(90deg,#833AB4 0%,#FD1D1D 50%,#FCB045 100%)",
+                        color: "#fff"
+                    }}
+                >Собрать логи</Button >
+            </form>
 
             {logs
                 ?
