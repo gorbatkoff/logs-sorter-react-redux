@@ -8,8 +8,7 @@ function Header() {
         <header className={styles.header}>
             <div className={styles.first}>
                 <Link to="/">Главная</Link>
-                <Link to="/check-by-id">Проверить архив по Id</Link>
-                <Link to="/search">Поиск</Link>
+                <Link to="/search">Поиск по базам</Link>
             </div>
 
             <div>
