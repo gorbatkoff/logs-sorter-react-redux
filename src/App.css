@@ -10,6 +10,10 @@ ul {
   margin: 0;
 }
 
+button{
+  text-transform: none !important;
+}
+
 .dropzone {
   text-align: center;
   padding: 10px;
