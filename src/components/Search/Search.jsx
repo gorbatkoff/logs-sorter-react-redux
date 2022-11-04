@@ -1,51 +1,29 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import DataOutput from './DataOutput.jsx/DataOutput';
 
 import { TextField, Select, Button, MenuItem, InputLabel, Box, FormControl, Container } from '@mui/material';
-import { useForm } from 'react-hook-form';
-
-import { api } from './../../config/index';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 import styles from './Search.module.css';
-import DataOutput from './DataOutput.jsx/DataOutput';
+
+import { api } from './../../config/index';
+import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import axios from 'axios';
-
 import FileSaver from "file-saver";
-import { Co2Sharp } from '@mui/icons-material';
 
 function Search() {
+
+    const [data, setData] = useState();
+    const [logs, setLogs] = useState();
+
+    const [typeOfSearch, setTypeOfSearch] = useState('');
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     const dispatch = useDispatch();
     const countOfItems = useSelector(state => state.itemsCount);
 
-    const [logs, setLogs] = useState();
-
-    const getFiles = async (id) => {
-
-        try {
-            const request = await axios.get(`http://94.181.21.237:5000/api/Userdata/GetFileUserdatasBySiteId?SiteId=${id}`);
-
-            setLogs(request.data.split('\n'));
-
-        } catch (error) {
-            console.log(error);
-        }
-
-    }
-
-    function createBlob() {
-        var blob = new Blob(logs, {
-            type: "text/plain;charset=utf-8"
-        });
-        FileSaver.saveAs(blob, "Logs.txt");
-    }
-
-    const [data, setData] = useState();
-
-    const [typeOfSearch, setTypeOfSearch] = useState('');
-    const [placeOfSearch, setPlaceOfSearch] = useState('');
-    const { register, handleSubmit, formState: { errors } } = useForm();
 
     async function getSites(data) {
         try {
@@ -89,9 +67,6 @@ function Search() {
 
     async function onSubmit(data, typeOfSearch) {
 
-
-        // if (data.place === 'logs') {
-
         switch (data.type) {
             case 'Emails':
                 return getEmails(data);
@@ -102,23 +77,17 @@ function Search() {
             default:
                 return null;
         }
-        // }
-
-        // if (data.place === 'files') {
-        //     getFiles(data.search);
-        //     setTypeOfSearch('Sites');
-        // }
 
     }
 
-    async function outputLogins(id) {
+    async function outputLogins(data) {
+
+        const id = data['search-by-id'];
 
         try {
-            const request = await axios.get(`
-            http://94.181.21.237:5000/api/Userdata/GetFileUserdatasBySiteId?SiteId=${id}
-            `);
+            const request = await axios.get(`http://94.181.21.237:5000/api/Userdata/GetFileUserdatasBySiteId?SiteId=${id}`);
 
-            setLogs(request.data.split('\n'));
+            setLogs(() => request.data.split('\n'));
 
         } catch (error) {
             console.log(error);
@@ -126,42 +95,27 @@ function Search() {
 
     }
 
+    function createBlob() {
 
+        var blob = new Blob(logs, {
+            type: "text/plain;charset=utf-8"
+        });
+
+        FileSaver.saveAs(blob, `Logs.txt`);
+    }
 
     const handleChangeType = (event) => {
         setTypeOfSearch(event.target.value);
         setData();
     };
 
-    const handleChangePlace = (event) => {
-        setPlaceOfSearch(event.target.value);
-        setData()
-    }
-
     return (
-        <div style={{ paddingTop: "5em" }}>
+        <div style={{ paddingTop: "3em" }}>
 
-            <h3 align="center">Поиск по базам</h3>
+            <h3>Поиск по базам</h3>
             <form className={styles.search} onSubmit={handleSubmit(onSubmit)}>
                 <TextField {...register("search")} id="outlined-basic" label="Что будем искать?" variant="outlined"
                     sx={{ width: '50%', }} placeholder="Id / Text search" />
-
-                {/* <Box sx={{ width: '25%', }}>
-                    <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">Что искать?</InputLabel>
-                        <Select
-                            {...register("place")}
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={placeOfSearch}
-                            label="Тип поиска"
-                            onChange={handleChangePlace}
-                        >
-                            <MenuItem value={"logs"}>Логи</MenuItem>
-                            <MenuItem value={"files"}>Логин/Пароли</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Box> */}
 
                 <Box sx={{ width: '25%', }}>
                     <FormControl fullWidth>
@@ -188,28 +142,21 @@ function Search() {
                 >Поиск</Button >
             </form>
 
-            
             {
-                    data
-                        ?
-                        <DataOutput data={data} type={typeOfSearch} />
-                        :
-                        <Container>
-                            <h2 align="center">Нажмите кнопку «Поиск»</h2>
-                        </Container>
-                }
+                data
+                    ?
+                    <DataOutput data={data} type={typeOfSearch} />
+                    :
+                    <Container>
+                        <h4 align="center">Нажмите кнопку «Поиск»</h4>
+                    </Container>
+            }
 
+            <h3>Поиск по логинами и паролям</h3>
 
-
-            {/* ================================================ */}
-
-            {/* ================================================ */}
-
-            <h3 align="center">Поиск по логинами и паролям</h3>
-
-            <form className={styles.search} onSubmit={handleSubmit(outputLogins)}>
+            <form className={styles['second-search']} onSubmit={handleSubmit(outputLogins)}>
                 <TextField {...register("search-by-id")} id="outlined-basic" label="Введите Id" variant="outlined"
-                    sx={{ width: '50%', }} placeholder="353" />
+                sx={{ width: '40%'}} placeholder="353" />
 
 
                 <Button type="submit" variant="contained" size="large"
@@ -217,15 +164,21 @@ function Search() {
                         background: "linear-gradient(90deg,#833AB4 0%,#FD1D1D 50%,#FCB045 100%)",
                         color: "#fff"
                     }}
-                >Собрать логи</Button >
+                >Получить логи</Button >
+
+                {logs
+                    ?
+                    <Button variant="contained" size="large"
+                        sx={{ background: "red", textTransform: 'none', background: 'linear-gradient(90deg,#833AB4 0%,#FD1D1D 50%,#FCB045 100%)' }}
+                        endIcon={<CloudDownloadIcon />} onClick={createBlob}>
+                        Скачать логи
+                    </Button>
+                    :
+                    <></>
+                }
             </form>
 
-            {logs
-                ?
-                <Button sx={{ margin: '0 auto', display: 'flex', justifyContent: 'center' }} onClick={createBlob}>Скачать Логины / Пароли</Button>
-                :
-                <></>
-            }
+
         </div>
     )
 }
