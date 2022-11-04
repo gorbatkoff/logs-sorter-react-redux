@@ -11,7 +11,7 @@ function DataOutput({ data, type }) {
 
     return (
         <div style={{ paddingTop: "2em" }}>
-            <h2 align="center">Получены следующие логи:</h2>
+            <h2 align="center">Получены следующие сервисы:</h2>
 
             <div className={styles.buttons}>
 
