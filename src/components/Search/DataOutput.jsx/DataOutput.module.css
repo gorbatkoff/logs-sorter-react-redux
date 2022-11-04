@@ -1,6 +1,7 @@
 .buttons{
     display: grid;
-    grid-template-columns: repeat(4, 300px);
+    grid-template-columns:  repeat(3, 30%);
     justify-content: space-between;
     padding: 0 100px;
+    grid-gap: 1em;
 }
