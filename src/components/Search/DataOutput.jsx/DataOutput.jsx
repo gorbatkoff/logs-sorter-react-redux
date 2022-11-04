@@ -1,5 +1,5 @@
 import React from 'react'
-import ElementOfOutput from './ElementOfOutput.jsx/ElementOfOutput'
+import ElementOfOutput from './ElementOfOutput/ElementOfOutput'
 
 import { Container } from '@mui/material'
 import Pagination from '@mui/material/Pagination';
@@ -11,7 +11,7 @@ function DataOutput({ data, type }) {
 
     return (
         <div style={{ paddingTop: "2em" }}>
-            <h2 align="center">Выберите сервис по которому хотите просмотреть логи</h2>
+            <h2 align="center">Получены следующие логи:</h2>
 
             <div className={styles.buttons}>
 
