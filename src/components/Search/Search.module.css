@@ -1,5 +1,5 @@
 .search {
-    width: 750px;
+    width: 800px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -8,14 +8,16 @@
 }
 
 .second-search {
-    width: 750px;
+    width: 800px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0em auto 
 }
 
+
+
 h3 {
     margin-top: 100px;
-    margin-left: 25%;
+    margin-left: 24%;
 }

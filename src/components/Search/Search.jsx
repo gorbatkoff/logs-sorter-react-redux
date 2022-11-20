@@ -17,6 +17,7 @@ function Search() {
 
     const [data, setData] = useState();
     const [logs, setLogs] = useState();
+    const [logsFile, setLogsFile] = useState();
 
     const [typeOfSearch, setTypeOfSearch] = useState('');
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -65,6 +66,26 @@ function Search() {
         }
     }
 
+    async function getLogs(data) {
+        try {
+            axios({
+                url: `http://91.220.69.117:5000/api/Userdata/GetArchiveUserdatasBySiteId?SiteId=${data['search-logs-by-id']}&Count=${data.count}`,
+                method: 'GET',
+                responseType: 'blob', // important
+              }).then((response) => {
+                 const url = window.URL.createObjectURL(new Blob([response.data]));
+                 const link = document.createElement('a');
+                 link.href = url;
+                 link.setAttribute('download', data['name-of-file'] + '.zip' || 'Logs.zip'); //or any other extension
+                 document.body.appendChild(link);
+                 link.click();
+              });
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async function onSubmit(data, typeOfSearch) {
 
         switch (data.type) {
@@ -85,7 +106,9 @@ function Search() {
         const id = data['search-by-id'];
 
         try {
-            const request = await axios.get(`http://94.181.21.237:5000/api/Userdata/GetFileUserdatasBySiteId?SiteId=${id}`);
+            const request = await axios.get(`http://91.220.69.117:5000/api/Userdata/GetFileUserdatasBySiteId?SiteId=${id}`);
+
+            console.log(request.data);
 
             setLogs(() => request.data.split('\n'));
 
@@ -104,6 +127,16 @@ function Search() {
         FileSaver.saveAs(blob, `Logs.txt`);
     }
 
+    function createBlobForLogs() {
+
+        let blob = new Blob([logsFile], { type: 'application/zip' })
+          let link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          document.body.appendChild(link);
+          link.click()
+          document.body.removeChild(link);
+    }
+
     const handleChangeType = (event) => {
         setTypeOfSearch(event.target.value);
         setData();
@@ -113,6 +146,8 @@ function Search() {
         <div style={{ paddingTop: "3em" }}>
 
             <h3>Поиск по базам</h3>
+            
+            
             <form className={styles.search} onSubmit={handleSubmit(onSubmit)}>
                 <TextField {...register("search")} id="outlined-basic" label="Что будем искать?" variant="outlined"
                     sx={{ width: '50%', }} placeholder="Id / Text search" />
@@ -130,7 +165,6 @@ function Search() {
                         >
                             <MenuItem value={"Sites"}>По сайтам</MenuItem>
                             <MenuItem value={"Emails"}>По почтам</MenuItem>
-                            <MenuItem value={"UserDatas"}>По данным</MenuItem>
                         </Select>
                     </FormControl>
                 </Box>
@@ -140,7 +174,7 @@ function Search() {
                         color: "#fff"
                     }}
                 >Поиск</Button >
-            </form>
+            </form> 
 
             {
                 data
@@ -156,7 +190,7 @@ function Search() {
 
             <form className={styles['second-search']} onSubmit={handleSubmit(outputLogins)}>
                 <TextField {...register("search-by-id")} id="outlined-basic" label="Введите Id" variant="outlined"
-                sx={{ width: '40%'}} placeholder="353" />
+                    sx={{ width: '30%' }} placeholder="353" />
 
 
                 <Button type="submit" variant="contained" size="large"
@@ -164,20 +198,55 @@ function Search() {
                         background: "linear-gradient(90deg,#833AB4 0%,#FD1D1D 50%,#FCB045 100%)",
                         color: "#fff"
                     }}
-                >Получить логи</Button >
+                >Получить Логины:Пароли</Button >
 
                 {logs
                     ?
                     <Button variant="contained" size="large"
                         sx={{ background: "red", textTransform: 'none', background: 'linear-gradient(90deg,#833AB4 0%,#FD1D1D 50%,#FCB045 100%)' }}
                         endIcon={<CloudDownloadIcon />} onClick={createBlob}>
-                        Скачать логи
+                        Скачать Логины:Пароли
                     </Button>
                     :
                     <></>
                 }
             </form>
 
+            <h3>Поиск по логам</h3>
+
+            <form className={styles['second-search']} onSubmit={handleSubmit(getLogs)}>
+                <TextField {...register("search-logs-by-id")} id="outlined-basic" label="Введите Id" variant="outlined"
+                    sx={{ width: '20%' }} placeholder="353" />
+
+                <TextField {...register("count")} id="outlined-basic" label="Введите количество" variant="outlined"
+                    sx={{ width: '30%' }} placeholder="353" />
+
+                <TextField {...register("name-of-file")} id="outlined-basic" label="Имя файла (необязательно)" variant="outlined"
+                    sx={{ width: '30%' }} placeholder="Azure, Amazon, Microsoft ..." />
+
+                <Button type="submit" variant="contained" size="large"
+                    sx={{
+                        background: "linear-gradient(90deg,#833AB4 0%,#FD1D1D 50%,#FCB045 100%)",
+                        color: "#fff"
+                    }}
+                >Получить Логи</Button >
+
+                {logsFile
+                    ?
+                    <Button variant="contained" size="large"
+                        sx={{ background: "red", textTransform: 'none', background: 'linear-gradient(90deg,#833AB4 0%,#FD1D1D 50%,#FCB045 100%)' }}
+                        endIcon={<CloudDownloadIcon />} onClick={createBlobForLogs}>
+                        Скачать Логи
+                    </Button>
+                    :
+                    <></>
+                }
+
+            </form>
+
+            <div style={{margin: "100px"}}>
+
+            </div>
 
         </div>
     )

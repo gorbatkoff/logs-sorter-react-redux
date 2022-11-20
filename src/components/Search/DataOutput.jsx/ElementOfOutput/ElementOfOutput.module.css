@@ -1,6 +1,7 @@
 .button {
     display: flex;
     justify-content: space-between;
+    height: fit-content;
     width: 100%;
     margin: 5px 1em;
     padding: 10px 10px;
