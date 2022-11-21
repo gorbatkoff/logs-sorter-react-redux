@@ -12,12 +12,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0em auto 
+    margin: 0em auto
 }
 
 
 
 h3 {
-    margin-top: 100px;
-    margin-left: 24%;
+    width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 3em auto 10px auto;
 }
